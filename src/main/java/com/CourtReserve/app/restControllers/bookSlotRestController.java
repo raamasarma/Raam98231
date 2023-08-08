@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import javax.swing.text.DateFormatter;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -179,10 +180,19 @@ public class bookSlotRestController {
             gameMode = "singles";
 
         }
+
+        LocalDate date= bookSlot.getGameDate();
+        System.out.println("date:"+date);
+        DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String DateinText = date.format(formatters);
+        System.out.println("text:"+DateinText);
+       // LocalDate parsedDate = LocalDate.parse(text, formatters);
+        //System.out.println("parsedDate:"+parsedDate);
         User user1 = userRepository.findByMobileNo(bookSlot.getBookedBy());
         Slot slot = slotRepository.findBySlotCode(bookSlot.getSlotCode());
 //        String msg = "Can you change your game mode to " + gameMode + "  as there is an opening for this game mode at your chosen slot on " + bookSlot.getGameDate() + " at " + slot.getStartHour() + " to " + slot.getEndHour();
-        String msg =  courtRepository.findByCode(bookSlot.getCourtCode()).getName()+"-"+bookSlot.getGameDate() + " at " + slot.getStartHour() + " to " + slot.getEndHour() +"-"+bookSlot.getGameMode();
+        String msg = "your Booking is:"+ courtRepository.findByCode(bookSlot.getCourtCode()).getName()+"("+slot.getCourtCode()+")"+" Date : "+DateinText + " at " + slot.getStartHour() + " to " + slot.getEndHour() +"-"+bookSlot.getGameMode();
+        //String msg =  courtRepository.findByCode(bookSlot.getCourtCode()).getName()+"("+slot.getCourtCode()+")"+" Date : "+DateinText + " at " + slot.getStartHour() + " to " + slot.getEndHour() +"-"+bookSlot.getGameMode();
 
         Notifies notifies = new Notifies();
         notifies.setMsg(msg);

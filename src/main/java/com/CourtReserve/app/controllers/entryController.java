@@ -37,7 +37,7 @@ public class entryController {
         if (session.getAttribute("verified") != null ){
             if (session.getAttribute("verified").toString().equals( "true")){
 
-            return "entryTemplates/registrationForm";}
+                return "entryTemplates/registrationForm";}
         } else {
             return "entryTemplates/verification";
         }
@@ -71,6 +71,7 @@ public class entryController {
                 userLog.setSessionId(session.getId());
                 userLog.setStatus("active");
                 userLogRepository.save(userLog);
+                //messages.add("Successfully login");
                 result = "redirect:/";
             } else {
                 messages.add("Pls Enter Valid Credentials");
@@ -80,7 +81,7 @@ public class entryController {
         }else{
             messages.add("User Already LoggedIn!");
             System.out.println("user already loggedin");
-            result= "entryTemplates/login";
+            result= "redirect:entryTemplates/login";
         }
         model.addAttribute("messages", messages);
         return result;
@@ -89,7 +90,7 @@ public class entryController {
     public String loginUser(HttpSession session){
         UserLog userLog=new UserLog();
         System.out.println(session.getId());
-        // User user=new User();
+        User user=new User();
         UserLog usercheck= userLogRepository.findBySessionIdAndStatus(session.getId(),"active");
         System.out.println("user Checking:"+usercheck);
         userLogRepository.delete(usercheck);
@@ -100,32 +101,12 @@ public class entryController {
         return "redirect:/";
 
     }
-    @RequestMapping("/public/password")
-    public String changePassword(){
-        System.out.println("password");
-        return "entryTemplates/password";
-    }
-    @PostMapping("/public/password")
-    public String changePassword( HttpServletRequest request, Model model,@RequestParam String mobileNo,  @RequestParam String oldPassword, @RequestParam String newPassword) {
-        System.out.println(mobileNo);
-        System.out.println(oldPassword);
-        System.out.println(newPassword);
-//        System.out.println(con_password);
-        User user = userRepository.findByMobileNoAndPassword(mobileNo, oldPassword);
-
-        if(user!=null)
-        {
-            user.setPassword(newPassword);
-            userRepository.save(user);
-        }
-        return "entryTemplates/login";
-    }
-
     @PostMapping("/public/register")
-    public String registerUser(@ModelAttribute User user, HttpSession session) {
+    public String registerUser(@ModelAttribute User user, HttpSession session,Model model) {
         // Process the user registration
-
-
+        System.out.println("user:"+user);
+        List<String> messages = new ArrayList<>();
+        String result="";
         if (user.getReferral().equals("")){
             user.setUserType("NonMember");
         }else{
@@ -134,14 +115,92 @@ public class entryController {
             Referral referral = referralRepository.findByCode(user.getReferral().toString());
 
             user.setUserType(referral.getType());
+            messages.add(" you Registered Successfully");
 
         }
         userRepository.save(user);
         session.setAttribute("verified" , null);
         session.setAttribute("mobileNo", null);
+        model.addAttribute("messages",messages);
 
         // Redirect to a success page or perform other actions
         return "redirect:/"; // Name of the success page or URL
+    }
+    @GetMapping("/public/password")
+    public String changePassword(){
+        System.out.println("password");
+        return "entryTemplates/password";
+    }
+    @PostMapping("/public/password")
+    public String changePassword( HttpServletRequest request, Model model,@RequestParam Map<String, String> body) {
+        List<String> messages = new ArrayList<>();
+        System.out.println(body);
+        String result="";
+        User user = userRepository.findByMobileNo(body.get("mobileNo"));
+        System.out.println("user:" + user);
+        if(user==null){
+            messages.add("Pls Enter Registered MobileNo");
+            result = "entryTemplates/password";
+        }
+        else{
+            System.out.println("user mob:" + user.getMobileNo());
+            System.out.println("user mob:" + body.get("mobileNo"));
+            user.setPassword(body.get("newPassword"));
+            System.out.println(user);
+            messages.add("Your Password Has Been Changed Successfully");
+            result ="redirect:entryTemplates/login";
+        }
+        model.addAttribute("messages",messages);
+        return result;
+    }
+
+    @GetMapping("/public/pwd")
+    public String changePwdHtmlForm(){
+        System.out.println("password");
+        return "entryTemplates/changePassword";
+    }
+    @PostMapping("/public/pwd")
+    public String changePwdHtmlForm(HttpServletRequest request, Model model, @RequestParam String mobileNo, @RequestParam String oldPassword) {
+        System.out.println("333333333");
+        System.out.println(mobileNo);
+        System.out.println("22222222");
+        System.out.println(oldPassword);
+
+//        System.out.println(con_password);
+        User user = userRepository.findByMobileNo(mobileNo);
+
+
+        user.setPassword(oldPassword);
+        userRepository.save(user);
+        System.out.println(user);
+
+        return "redirect:/";
+    }
+
+    @PostMapping("/getOldPassword")
+    public ResponseEntity<?> getCustValues(@RequestParam Map<String, String> body) {
+        Map<String, String> respBody = new HashMap<>();
+        System.out.println("111111111");
+        System.out.println(body);
+        User user = userRepository.findByMobileNo(body.get("mobileNo"));
+        System.out.println(user);
+        System.out.println(user.getPassword());
+        respBody.putIfAbsent("password", user.getPassword());
+        return ResponseEntity.ok(respBody);
+    }
+
+    @PostMapping("/passwordEdit")
+    public ResponseEntity<?> passwordEdit(@RequestParam Map<String, String> body) {
+        Map<String, String> respBody = new HashMap<>();
+        System.out.println("55555555555555");
+        System.out.println("body:"+body);
+        User user = userRepository.findByMobileNo(body.get("mobileNo"));
+        System.out.println(user);
+        System.out.println(user.getPassword());
+        user.setPassword(body.get("password"));
+        System.out.println(user);
+        userRepository.save(user);
+        return ResponseEntity.ok(respBody);
     }
 
 }

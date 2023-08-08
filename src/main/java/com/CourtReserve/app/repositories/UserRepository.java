@@ -15,4 +15,5 @@ public interface UserRepository extends CrudRepository<User, Long> {
     User findByMobileNo(String MobileNo);
 
     List<User> findByOrderByIdDesc();
+    User findByPassword( String Password);
 }

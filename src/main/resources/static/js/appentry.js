@@ -6,9 +6,17 @@ $('document').ready(function (){
          method: 'post',
          data: {"mobileNo": $("#mobileNo").val()},
          success: function(response) {
+       alert(response);
+       alert(data);
+         if((response===null)&&(response==="")){
+         console.log(response);
+        // alert(response.msg);
+        alert(response);
+         }
+         else{
            // Handle the successful response
            console.log(response);
-           alert(response.msg + " "  + response.otp);
+//           alert(response.msg + " "  + response.otp);
          },
          error: function(xhr, status, error) {
            // Handle the error

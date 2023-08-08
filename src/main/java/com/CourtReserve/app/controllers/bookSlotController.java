@@ -124,7 +124,7 @@ public class bookSlotController {
             BookSlot bookSlot1 = bookSlotRepository.findByGameDateAndSlotCodeAndBookedBy(dateModified,slot.getSlotCode(),user.get("mobileNo").toString()  );
             if (bookSlot1 != null){
                 statusColor = "blue";
-                status = "Already booked for" + bookSlot1.getGameMode() + "  Booking status: " +bookSlot1.getConfirmStatus() ;
+                status = bookSlot1.getConfirmStatus()+"-"+bookSlot1.getGameMode();
 
             }
 
@@ -132,6 +132,7 @@ public class bookSlotController {
             slotMap.putIfAbsent("statusColor",statusColor);
             slotListed.add(slotMap);
         }
+
         System.out.println(slots);
         model.addAttribute("slots", slotListed);
         model.addAttribute("date", date);
