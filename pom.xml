@@ -111,6 +111,49 @@
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-java8time</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>com.github.lbovolini</groupId>
+            <artifactId>ObjectMapper</artifactId>
+            <version>0.2.3</version>
+        </dependency>
+		<dependency>
+			<groupId>com.github.lbovolini</groupId>
+			<artifactId>object-mapper</artifactId>
+			<version>1.1.68</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.lbovolini</groupId>
+			<artifactId>object-mapper</artifactId>
+			<version>1.1.68</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.lbovolini</groupId>
+			<artifactId>object-mapper</artifactId>
+			<version>1.1.68</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.lbovolini</groupId>
+			<artifactId>object-mapper</artifactId>
+			<version>1.1.68</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.lbovolini</groupId>
+			<artifactId>object-mapper</artifactId>
+			<version>1.1.68</version>
+			<scope>import</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.lbovolini</groupId>
+			<artifactId>object-mapper</artifactId>
+			<version>1.1.68</version>
+			<scope>import</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.lbovolini</groupId>
+			<artifactId>object-mapper</artifactId>
+			<version>1.1.68</version>
+			<scope>import</scope>
+		</dependency>
 
 
 	</dependencies>

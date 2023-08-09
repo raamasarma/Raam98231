@@ -4,7 +4,7 @@ import com.CourtReserve.app.models.*;
 import com.CourtReserve.app.repositories.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import csv.DownloadCsvReport;
 
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -213,7 +213,9 @@ public class slotController {
 
     }
     @PostMapping("/slotViewData")
-    public @ResponseBody String slotViewOrder(HttpServletResponse response,HttpServletRequest request) throws JsonProcessingException {
+    public @ResponseBody String slotViewOrder(Model model,HttpServletResponse response,HttpServletRequest request) throws JsonProcessingException {
+
+
         System.out.println("88888888888");
         //System.out.println(body);
         String mobileNo=request.getParameter("mobileNo");
@@ -231,6 +233,12 @@ public class slotController {
             list = bookSlotRepository.findByGameDateBetweenAndConfirmStatusAndGameModeOrderByIdAsc(fromDate,toDate,status,gameMode);
         } else if(!status.equals("all") && !mobileNo.equals("all") && gameMode.equals("all")){
             list = bookSlotRepository.findByGameDateBetweenAndConfirmStatusAndBookedByOrderByIdAsc(fromDate,toDate,status,mobileNo);
+        }
+        if(list.size()==0){
+            List messages=new ArrayList<>();
+            messages.add("No Matches Found");
+            model.addAttribute("messages",messages);
+            System.out.println("No Matches Found");
         }
 
 
@@ -270,46 +278,47 @@ public class slotController {
         HSSFRow Header = sheet.createRow(0);
         int headercellStart = 0;
         String header[] ={"gameDate","slotCode","gameMode","confirmStatus","bookedBy","bookTime","approvedBy","RemarksByUser","RemarksByAdmin"};
-        for (String i : header) {
-            HSSFCellStyle style = workbook.createCellStyle();
-            style.setFillBackgroundColor(IndexedColors.BRIGHT_GREEN.getIndex());
-            HSSFCell cell = Header.createCell(headercellStart);
-            cell.setCellValue(i);
-            cell.setCellStyle(style);
-            headercellStart = headercellStart + 1;
-        }
-        int rowVal = 1;
-        for (BookSlot order : list) {
-            System.out.println("order:"+order);
-            HSSFRow row = sheet.createRow(rowVal);
-            int cellval = 0;
-            User user1 = userRepository.findByMobileNo(body.get("mobileNo"));
-            for (String i : order.getListValues(user1.getMobileNo())) {
-                System.out.println("Hi:"+i);
-                HSSFCell cell = row.createCell(cellval);
-                cellval= cellval+ 1;
-
-                if (cellval == header.length-1 ) {
-                    cell.setCellValue(i);
-                }
-                else{
-                    cell.setCellValue(i);
-                }
-            }
-
-            rowVal= rowVal+1;
-        }
-        try {
-
-            ByteArrayOutputStream ops = new ByteArrayOutputStream();
-            workbook.write(ops);
-            workbook.close();
-
-
-            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename="+fromDate.toString()+"-"+toDate.toString()+".xlsx").contentType(MediaType.APPLICATION_OCTET_STREAM).body(ops.toByteArray());
-        }catch (Exception e){
-
-        }
+        DownloadCsvReport.getCsvReportDownload(response, header, list, "slot_data.csv");
+//        for (String i : header) {
+//            HSSFCellStyle style = workbook.createCellStyle();
+//            style.setFillBackgroundColor(IndexedColors.BRIGHT_GREEN.getIndex());
+//            HSSFCell cell = Header.createCell(headercellStart);
+//            cell.setCellValue(i);
+//            cell.setCellStyle(style);
+//            headercellStart = headercellStart + 1;
+//        }
+//        int rowVal = 1;
+//        for (BookSlot order : list) {
+//            System.out.println("order:"+order);
+//            HSSFRow row = sheet.createRow(rowVal);
+//            int cellval = 0;
+//            User user1 = userRepository.findByMobileNo(body.get("mobileNo"));
+//            for (String i : order.getListValues(user1.getMobileNo())) {
+//                System.out.println("Hi:"+i);
+//                HSSFCell cell = row.createCell(cellval);
+//                cellval= cellval+ 1;
+//
+//                if (cellval == header.length-1 ) {
+//                    cell.setCellValue(i);
+//                }
+//                else{
+//                    cell.setCellValue(i);
+//                }
+//            }
+//
+//            rowVal= rowVal+1;
+//        }
+//        try {
+//
+//            ByteArrayOutputStream ops = new ByteArrayOutputStream();
+//            workbook.write(ops);
+//            workbook.close();
+//
+//
+//            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename="+fromDate.toString()+"-"+toDate.toString()+".xls").contentType(MediaType.APPLICATION_OCTET_STREAM).body(ops.toByteArray());
+//        }catch (Exception e){
+//
+//        }
 
 
         return (ResponseEntity) ResponseEntity.status(203);
@@ -346,61 +355,65 @@ public class slotController {
         renderer.finishPDF();
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename="+fromDate.toString()+"-"+toDate.toString()+".pdf").contentType(MediaType.APPLICATION_OCTET_STREAM).body(ops.toByteArray());
 
-    }@GetMapping("/slotExcelDataUser")
+    }
+
+
+    @GetMapping("/slotExcelDataUser")
     public ResponseEntity slotViewUserOrder1(HttpSession session,@RequestParam Map<String, String> body,Model model,HttpServletResponse response, HttpServletRequest request) throws Exception {
 
         String mob= request.getSession().getAttribute("loggedMobile").toString();
         User user= userRepository.findByMobileNo(mob);
-        // List<BookSlot> list =  bookSlotRepository.findByGameDate(date);
         List<BookSlot> list = bookSlotRepository.findByBookedBy(mob);
         System.out.println("list:"+list);
-        // model.addAttribute("list", list);
         System.out.println("Excel Size -- " + list.size());
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet(request.getSession().getAttribute("loggedMobile").toString());
         HSSFRow Header = sheet.createRow(0);
         int headercellStart = 0;
-        String header[] ={"gameDate","slotCode","gameMode","confirmStatus","bookedBy","bookTime","approvedBy","RemarksByUser","RemarksByAdmin"};
-        for (String i : header) {
-            HSSFCellStyle style = workbook.createCellStyle();
-            style.setFillBackgroundColor(IndexedColors.BRIGHT_GREEN.getIndex());
-            HSSFCell cell = Header.createCell(headercellStart);
-            cell.setCellValue(i);
-            cell.setCellStyle(style);
-            headercellStart = headercellStart + 1;
-        }
-        int rowVal = 1;
-        for (BookSlot order : list) {
-            System.out.println("order:"+order);
-            HSSFRow row = sheet.createRow(rowVal);
-            int cellval = 0;
-            User user1 = userRepository.findByMobileNo(request.getSession().getAttribute("loggedMobile").toString());
-            for (String i : order.getListValues(user1.getMobileNo())) {
-                System.out.println("Hi:"+i);
-                HSSFCell cell = row.createCell(cellval);
-                cellval= cellval+ 1;
+        String header[] ={"gameDate","slotCode","gameMode","confirmStatus","bookedBy","approvedBy","RemarksByUser","RemarksByAdmin","bookTime"};
+       // String header[]={"gameDate","slotCode","game"};
+        DownloadCsvReport.getCsvReportDownload(response, header, list, "invoice_data.csv");
 
-                if (cellval == header.length-1 ) {
-                    cell.setCellValue(i);
-                }
-                else{
-                    cell.setCellValue(i);
-                }
-            }
-
-            rowVal= rowVal+1;
-        }
-        try {
-
-            ByteArrayOutputStream ops = new ByteArrayOutputStream();
-            workbook.write(ops);
-            workbook.close();
-
-
-            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename="+user.getUserName().toString()+".xlsx").contentType(MediaType.APPLICATION_OCTET_STREAM).body(ops.toByteArray());
-        }catch (Exception e){
-
-        }
+//        for (String i : header) {
+//            HSSFCellStyle style = workbook.createCellStyle();
+//            style.setFillBackgroundColor(IndexedColors.BRIGHT_GREEN.getIndex());
+//            HSSFCell cell = Header.createCell(headercellStart);
+//            cell.setCellValue(i);
+//            cell.setCellStyle(style);
+//            headercellStart = headercellStart + 1;
+//        }
+//        int rowVal = 1;
+//        for (BookSlot order : list) {
+//            System.out.println("order:"+order);
+//            HSSFRow row = sheet.createRow(rowVal);
+//            int cellval = 0;
+//            User user1 = userRepository.findByMobileNo(request.getSession().getAttribute("loggedMobile").toString());
+//            for (String i : order.getListValues(user1.getMobileNo())) {
+//                System.out.println("Hi:"+i);
+//                HSSFCell cell = row.createCell(cellval);
+//                cellval= cellval+ 1;
+//
+//                if (cellval == header.length-1 ) {
+//                    cell.setCellValue(i);
+//                }
+//                else{
+//                    cell.setCellValue(i);
+//                }
+//            }
+//
+//            rowVal= rowVal+1;
+//        }
+//        try {
+//
+//            ByteArrayOutputStream ops = new ByteArrayOutputStream();
+//            workbook.write(ops);
+//            workbook.close();
+//
+//
+//            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename="+user.getUserName().toString()+".xls").contentType(MediaType.APPLICATION_OCTET_STREAM).body(ops.toByteArray());
+//        }catch (Exception e){
+//
+//        }
 
 
         return (ResponseEntity) ResponseEntity.status(203);
@@ -409,13 +422,10 @@ public class slotController {
     @GetMapping("/slotPdfDataUser")
     public ResponseEntity slotViewPdfUserOrder(Model model,HttpServletResponse response,HttpServletRequest request) {
         System.out.println("@@@@@@@@@@@");
-        // LocalDateTime date= LocalDateTime.parse(request.getParameter("bookTime"));
         User user= userRepository.findByMobileNo(request.getSession().getAttribute("loggedMobile").toString());
         System.out.println("user:"+user);
         System.out.println("user:"+user.getUserName());
         List<BookSlot> lists=bookSlotRepository.findByBookedBy(request.getSession().getAttribute("loggedMobile").toString());
-        // List<BookSlot> lists =  bookSlotRepository.findByGameDate(date);
-        //List<BookSlot> lists=bookSlotRepository.findByBookedByAndBookTimeAndGameDate(mob,date,date1);
         System.out.println("list:"+lists);
         System.out.println("Excel Size -- " + lists.size());
         WebContext context = new WebContext(request, response, request.getServletContext());

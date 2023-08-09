@@ -113,4 +113,16 @@ $('#submitOtp').click(function() {
                   console.log(error);
                 }
               });});
+//              $('#get').click(function() {
+//                     $.ajax({
+//                       url: '/public/sendOldPassword',
+//                       method: 'post',
+//                       data: {"mobileNo": $("#mobileNo").val()},
+//                       success: function(response) {
+//                    if($("#mobileNo").val()==""){
+//                    alert(response.msg);
+//                    }
+
+
+
               })

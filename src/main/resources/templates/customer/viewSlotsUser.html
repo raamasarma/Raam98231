@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">-->
 <html lang="en"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layout" xmlns:th="http://www.w3.org/1999/xhtml">
@@ -58,7 +59,7 @@
 }
   </style>
   <div class="container">
-      <div th:replace="fragments/message :: message_html"></div>
+    <div th:replace="fragments/message :: message_html"></div>
   </div>
 </head>
 <body style="background-color:Blonde;">
@@ -72,7 +73,7 @@
       <div class="col">
         <label for="mobileNo">Username</label>
         <select id="mobileNo" class="form-control" name="username">
-          <option value="all">all</option>
+
           <option th:each="i : ${user}" th:value="${i.mobileNo}"><span th:text="${i.userName}"></span>-<span
                   th:text="${i.mobileNo}"></span></option>
         </select>
@@ -153,7 +154,7 @@ var status=$("#bookingStatus").val();
 $.ajax({
 async:'false',
  type: 'POST',
- url: '/slotViewData',
+ url: '/slotViewDataUser',
       data: {
      "username":username,
      "mobileNo":mobileNo,
@@ -189,7 +190,7 @@ var toDate = $("#toDate").val();
 var gameMode=$("#gameMode").val();
 var mobileNo=$("#mobileNo").val();
 var status=$("#bookingStatus").val();
-window.location.href="/slotPdfData?mobileNo="+ mobileNo  +"&userName="+username+"&fromDate="+fromDate+"&toDate="+toDate+"&gameMode="+gameMode+"&status="+status
+window.location.href="/slotPdfDataMember?mobileNo="+ mobileNo  +"&userName="+username+"&fromDate="+fromDate+"&toDate="+toDate+"&gameMode="+gameMode+"&status="+status
 });
 });
 
@@ -202,7 +203,7 @@ var toDate = $("#toDate").val();
 var gameMode=$("#gameMode").val();
 var mobileNo=$("#mobileNo").val();
 var status=$("#bookingStatus").val();
-window.location.href="/slotExcelData?mobileNo="+ mobileNo  +"&userName="+username+"&fromDate="+fromDate+"&toDate="+toDate+"&gameMode="+gameMode+"&status="+status;
+window.location.href="/slotExcelDataMember?mobileNo="+ mobileNo  +"&userName="+username+"&fromDate="+fromDate+"&toDate="+toDate+"&gameMode="+gameMode+"&status="+status;
 });
 });
 

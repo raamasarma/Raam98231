@@ -73,7 +73,6 @@ public class bookSlotRestController {
         bookSlot.setGameMode(map.get("gameMode").toString());
 
 
-
         bookSlot.setRemarksByUser(map.get("remarks").toString());
         String bkNo= dateModified.format(DateTimeFormatter.ofPattern("ddMMyyyy"))+ "-"+slot.getStartHour() +"-"+series;
         bookSlot.setBookingNo(bkNo);
@@ -191,7 +190,7 @@ public class bookSlotRestController {
         User user1 = userRepository.findByMobileNo(bookSlot.getBookedBy());
         Slot slot = slotRepository.findBySlotCode(bookSlot.getSlotCode());
 //        String msg = "Can you change your game mode to " + gameMode + "  as there is an opening for this game mode at your chosen slot on " + bookSlot.getGameDate() + " at " + slot.getStartHour() + " to " + slot.getEndHour();
-        String msg = "your Booking is:"+ courtRepository.findByCode(bookSlot.getCourtCode()).getName()+"("+slot.getCourtCode()+")"+" Date : "+DateinText + " at " + slot.getStartHour() + " to " + slot.getEndHour() +"-"+bookSlot.getGameMode();
+        String msg = "Your Booking : "+ courtRepository.findByCode(bookSlot.getCourtCode()).getName()+"("+slot.getCourtCode()+")"+" Date : "+DateinText + " at " + slot.getStartHour() + " to " + slot.getEndHour() +"-"+bookSlot.getGameMode();
         //String msg =  courtRepository.findByCode(bookSlot.getCourtCode()).getName()+"("+slot.getCourtCode()+")"+" Date : "+DateinText + " at " + slot.getStartHour() + " to " + slot.getEndHour() +"-"+bookSlot.getGameMode();
 
         Notifies notifies = new Notifies();

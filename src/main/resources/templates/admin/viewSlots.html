@@ -58,7 +58,7 @@
 }
   </style>
   <div class="container">
-    <div th:replace="fragments/message :: message_html"></div>
+      <div th:replace="fragments/message :: message_html"></div>
   </div>
 </head>
 <body style="background-color:Blonde;">
@@ -138,6 +138,8 @@
 
 </div>
     <script>
+     $('#fromDate').val(new Date().toISOString().slice(0, 10));
+      $('#toDate').val(new Date().toISOString().slice(0, 10));
  $('#getData').click(function() {
 
 var username = "";

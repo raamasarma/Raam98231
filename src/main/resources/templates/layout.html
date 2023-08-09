@@ -70,7 +70,7 @@
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
-            <img th:src="@{images/court.jpeg}" alt="" width="30" height="24" class="d-inline-block align-text-top">
+            <img th:src="@{images/Custom.jpg}" alt="" width="30" height="24" class="d-inline-block align-text-top">
             <font color="#00008b"> <b>BOOK MY COURT</b></font>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -110,6 +110,18 @@
                     </li>
                 </ul>
             </div>
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: Green;" aria-haspopup="true">
+                    <font color="green"><b>Reports</b></font>
+                </a>
+                <ul class="dropdown-menu">
+
+                    <li class="navbar-nav">
+                        <a class="nav-link active" aria-current="page" href="/slotViewDataUser">Bookings</a>
+                    </li>
+                </ul>
+            </div>
+
 
         </div>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup" th:if="${session.loggedIn == 'true' && session.user.userType == 'Admin' }">

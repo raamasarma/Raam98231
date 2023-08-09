@@ -100,7 +100,46 @@ public class entryRestController {
         }
 
 
+
     }
+//    @PostMapping("/public/sendOldPassword")
+//    public ResponseEntity<Map> sendOldPassword(@RequestParam Map<String, String> body, HttpSession session) {
+//        System.out.println("body"+body);
+//        String mob = body.get("mobileNo");
+//        User user3 =userRepository.findByMobileNo(mob);
+//        System.out.println("user2:"+user3);
+//        if (mob == "") {
+//            Map response = new HashMap();
+//            response.putIfAbsent("msg", "Pls Enter  Valid MobileNo");
+//            System.out.println("pls enter MobileNo");
+//        }
+//        else if(mob.length()!=10){
+//            Map response = new HashMap();
+//            response.putIfAbsent("msg", "Pls Enter 10 Digit MobileNo");
+//            System.out.println("pls enter  1o digit  MobileNo");
+//            return ResponseEntity.ok(response);
+//        }
+//        else if(user3==null){
+//            Map response = new HashMap();
+//            response.putIfAbsent("msg", user3.getMobileNo());
+//            System.out.println("Pls Enter Registered MobileNo");
+//            return ResponseEntity.ok(response);
+//        }
+//        else {
+//
+//            User user = userRepository.findByMobileNo(body.get("mobileNo"));
+//            System.out.println("user:"+user);
+//            String user4=user.getPassword();
+//            session.setAttribute("user4", user4);
+//
+//
+//            Map response = new HashMap();
+//            response.putIfAbsent("msg",user3.getMobileNo());
+//            response.putIfAbsent("user4", user4);
+//            return ResponseEntity.ok(response);
+//        }
+  //  }
+
 
 
     @PostMapping("/public/checkOtp")

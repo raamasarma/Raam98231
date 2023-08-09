@@ -14,7 +14,7 @@
 
             </h4>
             <div th:if="${notification.status == 'pending'}">
-            <p th:onclick="changeGameMode([[${notification.bookSlotId}]],'agreed',[[${notification.id}]])" class="btn btn-warning">Change to <span th:text="${notification.changeTo}"></span></p>
+            <p th:onclick="changeGameMode([[${notification.bookSlotId}]],'agreed',[[${notification.id}]])" class="btn btn-warning">Change It To <span th:text="${notification.changeTo}"></span></p>
             <p th:onclick="changeGameMode([[${notification.bookSlotId}]],'disagreed',[[${notification.id}]])" class="btn btn-danger">Not My Choice </p>
             </div>
 

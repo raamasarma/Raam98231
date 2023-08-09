@@ -71,7 +71,7 @@ public class entryController {
                 userLog.setSessionId(session.getId());
                 userLog.setStatus("active");
                 userLogRepository.save(userLog);
-                //messages.add("Successfully login");
+                messages.add("Successfully login");
                 result = "redirect:/";
             } else {
                 messages.add("Pls Enter Valid Credentials");
@@ -88,6 +88,7 @@ public class entryController {
     }
     @RequestMapping("/public/logout")
     public String loginUser(HttpSession session){
+        List<String> messages = new ArrayList<>();
         UserLog userLog=new UserLog();
         System.out.println(session.getId());
         User user=new User();
@@ -98,6 +99,7 @@ public class entryController {
         session.setAttribute("loggedMobile", null);
         session.setAttribute("userType", null);
         session.setAttribute("user", null);
+        messages.add("Successfully logout");
         return "redirect:/";
 
     }
