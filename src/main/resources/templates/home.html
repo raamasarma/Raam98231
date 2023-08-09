@@ -7,7 +7,7 @@
 <!--main content start-->
 <div layout:fragment="content">
 
-    <h1>Notifications</h1>
+<!--    <h1>Welcome</h1>-->
     <div  th:class="${'row'}" th:each="notification :${notifies}" >
         <div class="card" style="margin: 2px; align-times:center;">
             <h4 class="card-body" th:text="${notification.msg}">
